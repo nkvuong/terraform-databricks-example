@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "databricks_cmk" {
+data "aws_iam_policy_document" "databricks_cp_cmk" {
   version = "2012-10-17"
   statement {
     sid    = "Enable IAM User Permissions"
@@ -12,6 +12,33 @@ data "aws_iam_policy_document" "databricks_cmk" {
   }
   statement {
     sid    = "Allow Databricks to use KMS key for control plane managed services and DBFS"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::414351767826:root"]
+    }
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt"
+    ]
+    resources = ["*"]
+  }
+}
+
+data "aws_iam_policy_document" "databricks_dbfs_cmk" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "Allow Databricks to use KMS key for DBFS"
     effect = "Allow"
     principals {
       type        = "AWS"

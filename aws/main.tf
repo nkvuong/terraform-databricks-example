@@ -91,13 +91,14 @@ module "s3_root_bucket" {
   tags = var.tags
 }
 
-module "aws_kms" {
-  source = "./modules/aws_kms"
+module "databricks_aws_kms" {
+  source = "./modules/databricks_aws_kms"
 
   cross_account_role_arn = data.aws_iam_role.cross_account_role.arn
   prefix                 = local.prefix
   tags                   = var.tags
 }
+
 module "databricks_mws_workspace" {
   source = "./modules/databricks_workspace"
   providers = {
@@ -111,8 +112,8 @@ module "databricks_mws_workspace" {
   vpc_id                 = module.vpc.vpc_id
   cross_account_role_arn = data.aws_iam_role.cross_account_role.arn
   bucket_name            = module.s3_root_bucket.s3_bucket_id
-  cmk_alias              = module.aws_kms.cmk_alias
-  cmk_arn                = module.aws_kms.cmk_arn
+  storage_cmk            = module.databricks_aws_kms.storage_cmk
+  managed_services_cmk   = module.databricks_aws_kms.managed_services_cmk
   region                 = var.region
 }
 
