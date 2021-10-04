@@ -6,6 +6,14 @@ variable "cross_account_role_arn" {
   type = string
 }
 
+variable "cmk_alias" {
+  type = string  
+}
+
+variable "cmk_arn" {
+  type = string
+}
+
 variable "databricks_account_id" {
   type = string
 }

@@ -18,13 +18,23 @@ resource "databricks_mws_storage_configurations" "this" {
   storage_configuration_name = "${var.prefix}-storage"
 }
 
+resource "databricks_mws_customer_managed_keys" "this" {
+  account_id = var.databricks_account_id
+  aws_key_info {
+    key_arn   = var.cmk_arn
+    key_alias = var.cmk_alias
+  }
+  use_cases = ["MANAGED_SERVICES", "STORAGE"]
+}
 resource "databricks_mws_workspaces" "this" {
   account_id      = var.databricks_account_id
   aws_region      = var.region
   workspace_name  = var.prefix
   deployment_name = var.prefix
 
-  credentials_id           = databricks_mws_credentials.this.credentials_id
-  storage_configuration_id = databricks_mws_storage_configurations.this.storage_configuration_id
-  network_id               = databricks_mws_networks.this.network_id
+  credentials_id                           = databricks_mws_credentials.this.credentials_id
+  storage_configuration_id                 = databricks_mws_storage_configurations.this.storage_configuration_id
+  network_id                               = databricks_mws_networks.this.network_id
+  storage_customer_managed_key_id          = databricks_mws_customer_managed_keys.this.customer_managed_key_id
+  managed_services_customer_managed_key_id = databricks_mws_customer_managed_keys.this.customer_managed_key_id
 }

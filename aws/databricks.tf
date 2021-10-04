@@ -23,9 +23,5 @@ resource "databricks_notebook" "this" {
   provider = databricks.created_workspace
   path     = "${data.databricks_current_user.me.home}/Terraform/${local.prefix}-test-notebook"
   language = "PYTHON"
-  content_base64 = base64encode(<<-EOT
-    # created from ${abspath(path.module)}
-    display(spark.range(10))
-    EOT
-  )
+  source = "${path.module}/demo-notebook.py"
 }
