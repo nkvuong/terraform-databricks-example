@@ -19,12 +19,14 @@ Local AWS credentials should be set up, following instructions [here](https://re
 A Databricks account has been set up
 
 ### Deploy Environment
-This project will deploy all required AWS resources, before creating a Databricks workspace with sample cluster and notebook
+This project will deploy all required AWS resources, before creating a Databricks workspace with a sample cluster and notebook
 
 1. Modify the `workspace.tfvars` file 
-    * Use your own username for the users
-2. Run `./scripts/deploy.sh`
-3. The script will first run `./init.sh` which does the following
+    * Update the `aws_profile` (for the aws provider), `tags` (for aws resources), `cidr` (for the vpc) and `prefix` (to set name of resources) variables
+2. Modify the `iam.tf` file **if** you can create a [cross-account IAM role](https://docs.databricks.com/administration-guide/account-api/iam-role.html) using Terraform. Otherwise, add an existing role to the `cross_account_role` variable.
+3. Run `./scripts/deploy.sh`
+4. The script will first run `./init.sh` which does the following
     * install Terraform using `brew` if Terraform is not installed
     * initialize the Terraform modules
     * prompt for AccountId, Username, and Password to populate `secret.tfvars` file.
+5. The script then gives options to whether plan, apply or destroy the Terraform stack
