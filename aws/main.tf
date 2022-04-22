@@ -10,7 +10,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.7.0"
+  version = "3.14.0"
 
   name = local.prefix
   cidr = var.cidr_block
@@ -78,12 +78,22 @@ module "vpc_endpoints" {
   tags = var.tags
 }
 module "s3_root_bucket" {
-  source             = "terraform-aws-modules/s3-bucket/aws"
-  version            = "2.9.0"
-  bucket             = "${local.prefix}-rootbucket"
-  ignore_public_acls = true
-  attach_policy      = true
-  policy             = data.databricks_aws_bucket_policy.this.json
+  source                  = "terraform-aws-modules/s3-bucket/aws"
+  version                 = "3.1.0"
+  bucket                  = "${local.prefix}-rootbucket"
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  attach_policy           = true
+  policy                  = data.databricks_aws_bucket_policy.this.json
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
 
   # Allow deletion of non-empty bucket
   force_destroy = true
