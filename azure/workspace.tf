@@ -12,3 +12,7 @@ resource "azurerm_databricks_workspace" "this" {
   managed_resource_group_name = "${local.prefix}-workspace-rg"
   tags                        = local.tags
 }
+
+output "id" {
+  value = azurerm_databricks_workspace.this.id
+}
