@@ -5,7 +5,9 @@ resource "random_string" "naming" {
 }
 
 locals {
-  prefix = "${var.prefix}-${random_string.naming.result}"
+  prefix  = "${var.prefix}-${random_string.naming.result}"
+  subnets = cidrsubnets(var.cidr_block, 4, 4, 4, 4, 4)
+  private_subnets = slice(local.subnets, 1, 3)
 }
 
 module "vpc" {
@@ -21,12 +23,8 @@ module "vpc" {
   enable_nat_gateway   = true
   create_igw           = true
 
-  public_subnets = [cidrsubnet(var.cidr_block, 4, 0)]
-  private_subnets = [
-    cidrsubnet(var.cidr_block, 4, 1),
-    cidrsubnet(var.cidr_block, 4, 2),
-    cidrsubnet(var.cidr_block, 4, 3)
-  ]
+  public_subnets  = [local.subnets[0]]
+  private_subnets = local.private_subnets
 
   manage_default_security_group = true
   default_security_group_name   = "${local.prefix}-sg"
@@ -77,6 +75,7 @@ module "vpc_endpoints" {
 
   tags = var.tags
 }
+
 module "s3_root_bucket" {
   source                  = "terraform-aws-modules/s3-bucket/aws"
   version                 = "3.1.0"
@@ -120,11 +119,17 @@ module "databricks_mws_workspace" {
   security_group_ids     = [module.vpc.default_security_group_id]
   subnet_ids             = module.vpc.private_subnets
   vpc_id                 = module.vpc.vpc_id
+  backend_rest_id        = aws_vpc_endpoint.backend_rest.id
+  relay_id               = aws_vpc_endpoint.relay.id
   cross_account_role_arn = data.aws_iam_role.cross_account_role.arn
   bucket_name            = module.s3_root_bucket.s3_bucket_id
   storage_cmk            = module.databricks_aws_kms.storage_cmk
   managed_services_cmk   = module.databricks_aws_kms.managed_services_cmk
   region                 = var.region
+
+  depends_on = [
+    aws_vpc_endpoint.relay, aws_vpc_endpoint.backend_rest
+  ]
 }
 
 // create PAT token to provision entities within workspace

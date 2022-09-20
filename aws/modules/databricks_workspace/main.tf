@@ -47,3 +47,17 @@ resource "databricks_mws_workspaces" "this" {
   storage_customer_managed_key_id          = databricks_mws_customer_managed_keys.storage.customer_managed_key_id
   managed_services_customer_managed_key_id = databricks_mws_customer_managed_keys.managed_services.customer_managed_key_id
 }
+
+resource "databricks_mws_vpc_endpoint" "backend_rest_vpce" {
+  account_id          = var.databricks_account_id
+  aws_vpc_endpoint_id = var.backend_rest_id
+  vpc_endpoint_name   = "${var.prefix}-vpc-backend-${var.vpc_id}"
+  region              = var.region
+}
+
+resource "databricks_mws_vpc_endpoint" "relay" {
+  account_id          = var.databricks_account_id
+  aws_vpc_endpoint_id = var.relay_id
+  vpc_endpoint_name   = "${var.prefix}-vpc-relay-${var.vpc_id}"
+  region              = var.region
+}

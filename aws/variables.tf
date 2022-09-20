@@ -23,10 +23,21 @@ variable "aws_profile" {
   type = string
 }
 
-variable cross_account_role {
+variable "cross_account_role" {
   type = string
 }
 
-variable prefix {
+variable "prefix" {
   type = string  
+}
+
+variable "private_dns_enabled" { 
+  default = true 
+}
+
+variable "workspace_vpce_service" {
+
+}
+variable "relay_vpce_service" {
+
 }
