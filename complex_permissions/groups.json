@@ -1,0 +1,76 @@
+{
+    "groups": [
+        {
+            "name": "GRP_DEV_DBWAdmin",
+            "allow_cluster_create": true,
+            "allow_instance_pool_create": true,
+            "allow_databricks_sql_access": true,
+            "allow_workspace_access": true,
+            "cluster_permissions": [
+                {
+                    "cluster_name": "cluster-dev",
+                    "permission_level": "CAN_MANAGE"
+                },
+                {
+                    "cluster_name": "cluster-dev2",
+                    "permission_level": "CAN_MANAGE"
+                }
+            ]
+        },
+        {
+            "name": "GRP_DEV_DataEngrAdmin",
+            "allow_cluster_create": true,
+            "allow_instance_pool_create": true,
+            "allow_databricks_sql_access": true,
+            "allow_workspace_access": true,
+            "cluster_permissions": [
+                {
+                    "cluster_name": "cluster-dev",
+                    "permission_level": "CAN_MANAGE"
+                }
+            ]
+        },
+        {
+            "name": "GRP_DEV_DataEngr",
+            "allow_cluster_create": false,
+            "allow_instance_pool_create": false,
+            "allow_databricks_sql_access": true,
+            "allow_workspace_access": true,
+            "cluster_permissions": [
+                {
+                    "cluster_name": "cluster-dev",
+                    "permission_level": "CAN_RESTART"
+                },
+                {
+                    "cluster_name": "cluster-dev2",
+                    "permission_level": "CAN_RESTART"
+                }
+            ]
+        },
+        {
+            "name": "GRP_DEV_DataScienceAdmin",
+            "allow_cluster_create": false,
+            "allow_instance_pool_create": false,
+            "allow_databricks_sql_access": true,
+            "allow_workspace_access": true,
+            "cluster_permissions": [
+                {
+                    "cluster_name": "cluster-dev",
+                    "permission_level": "CAN_MANAGE"
+                },
+                {
+                    "cluster_name": "cluster-dev2",
+                    "permission_level": "CAN_MANAGE"
+                }
+            ]
+        },
+        {
+            "name": "GRP_DEV_DataAnalyst",
+            "allow_cluster_create": false,
+            "allow_instance_pool_create": false,
+            "allow_databricks_sql_access": true,
+            "allow_workspace_access": false,
+            "cluster_permissions": []
+        }
+    ]
+  }
